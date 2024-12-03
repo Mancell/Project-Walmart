@@ -47,11 +47,79 @@ WHERE rank = 1
 
 -- Q. 4 
 -- Calculate the total quantity of items sold per payment method. List payment_method and total_quantity.
-
+/*
 SELECT payment_method, SUM(quantity) as total_quantity
 FROM walmart
 GROUP BY payment_method
-
+*/
 -- Q.5
 -- Determine the average, minimum, and maximum rating of category for each city. 
 -- List the city, average_rating, min_rating, and max_rating.
+
+/*
+SELECT 
+	category,
+	city, 
+	AVG(rating) as avg_rating,
+	MIN(rating) as min_rating,
+	MAX(rating) as max_rating
+from walmart
+GROUP BY 1,2
+*/
+
+-- Q.6
+-- Calculate the total profit for each category by considering total_profit as
+-- (unit_price * quantity * profit_margin). 
+-- List category and total_profit, ordered from highest to lowest profit.
+/*
+SELECT 
+	category,
+	SUM(total) as total_revenue,
+	SUM(total * profit_margin * unit_price) as profit
+FROM walmart
+GROUP BY 1
+*/
+-- Q.7
+-- Determine the most common payment method for each Branch. 
+-- Display Branch and the preferred_payment_method.
+/*
+WITH cte 
+AS
+(SELECT 
+	branch,
+	payment_method,
+	COUNT(*) as total_trans,
+	RANK() OVER(PARTITION BY branch ORDER BY COUNT(*) DESC) as rank
+FROM walmart
+GROUP BY 1, 2
+)
+SELECT *
+FROM cte
+WHERE rank = 1
+
+*/
+
+-- Q.8
+-- Categorize sales into 3 group MORNING, AFTERNOON, EVENING 
+-- Find out each of the shift and number of invoices
+
+/*
+SELECT
+	branch,
+CASE 
+		WHEN EXTRACT(HOUR FROM(time::time)) < 12 THEN 'Morning'
+		WHEN EXTRACT(HOUR FROM(time::time)) BETWEEN 12 AND 17 THEN 'Afternoon'
+		ELSE 'Evening'
+	END day_time,
+	COUNT(*)
+FROM walmart
+GROUP BY 1, 2
+ORDER BY 1, 3 DESC
+
+*/
+
+-- #9 Identify 5 branch with highest decrese ratio in 
+-- revevenue compare to last year(current year 2023 and last year 2022)
+
+-- rdr == last_rev-cr_rev/ls_rev*100
+
