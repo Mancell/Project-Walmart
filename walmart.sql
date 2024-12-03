@@ -45,3 +45,13 @@ FROM
 WHERE rank = 1
 */
 
+-- Q. 4 
+-- Calculate the total quantity of items sold per payment method. List payment_method and total_quantity.
+
+SELECT payment_method, SUM(quantity) as total_quantity
+FROM walmart
+GROUP BY payment_method
+
+-- Q.5
+-- Determine the average, minimum, and maximum rating of category for each city. 
+-- List the city, average_rating, min_rating, and max_rating.
